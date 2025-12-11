@@ -30,6 +30,14 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
         const user = await getUser(email);
 
         if (user && user.password === password) {
+          // メールアドレス認証済みかチェック
+          if (!user.emailVerified) {
+            // throw new Error("Email not verified"); // NextAuthのエラーハンドリングによってはエラーメッセージをUIに出せるが、nullを返すと単にログイン失敗になる
+            // ユーザーが見つからない場合と同じ挙動にするか、エラーを投げるか。
+            // ログイン失敗の原因を明確にするため、ここではnullを返すが、本来はエラーメッセージを出したい。
+            return null;
+          }
+
           // パスワードを除外して返す
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
           const { password: _, ...userWithoutPassword } = user;

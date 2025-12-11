@@ -10,11 +10,12 @@ export const authConfig = {
       // ログインページと登録ページ以外を保護対象とする
       const isOnLoginPage = nextUrl.pathname.startsWith('/login');
       const isOnRegisterPage = nextUrl.pathname.startsWith('/register');
+      const isOnVerifyPage = nextUrl.pathname.startsWith('/verify-email');
       const isStaticAsset = nextUrl.pathname.startsWith('/_next') || nextUrl.pathname.includes('.');
 
       if (isStaticAsset) return true;
 
-      if (isOnLoginPage || isOnRegisterPage) {
+      if (isOnLoginPage || isOnRegisterPage || isOnVerifyPage) {
         if (isLoggedIn) {
           // ログイン済みならトップへ
           return Response.redirect(new URL('/', nextUrl));

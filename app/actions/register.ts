@@ -1,7 +1,8 @@
 "use server";
 
 import { saveUser } from "@/app/lib/users";
-import { signIn } from "@/auth";
+import { generateVerificationToken } from "@/app/lib/tokens";
+import { sendVerificationEmail } from "@/app/lib/mail";
 
 export async function registerUser(formData: FormData) {
   const email = formData.get("email") as string;
@@ -23,8 +24,14 @@ export async function registerUser(formData: FormData) {
       email,
     });
 
-    // 登録成功後、自動的にログイン（signInは内部でredirectするためtry-catchの外で行うか、redirect: falseを使う）
-    // Server Action内でのsignInはリダイレクトを伴うため、ここで終了
+    // トークン生成
+    const token = await generateVerificationToken(email);
+
+    // メール送信（現在はコンソール出力のみ）
+    await sendVerificationEmail(email, token);
+
+    return { success: true };
+
   } catch (err: any) {
     if (err.message === 'Username already exists') {
       return { error: "このメールアドレスは既に登録されています" };
@@ -32,13 +39,6 @@ export async function registerUser(formData: FormData) {
     console.error(err);
     return { error: "登録中にエラーが発生しました" };
   }
-  
-  // 登録成功したらログイン処理へ
-  await signIn("credentials", {
-    email,
-    password,
-    redirectTo: "/",
-  });
 }
 
 

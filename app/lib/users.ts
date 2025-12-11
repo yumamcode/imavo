@@ -57,7 +57,10 @@ export async function getUser(username: string): Promise<User | undefined> {
   // テストユーザー（JSON）から検索
   const testUser = testUsers.find((user) => user.username === username);
   if (testUser) {
-    return testUser as User;
+    return {
+      ...testUser,
+      emailVerified: testUser.emailVerified ? new Date(testUser.emailVerified) : null,
+    } as User;
   }
 
   try {

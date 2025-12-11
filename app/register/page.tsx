@@ -6,14 +6,36 @@ import Link from "next/link";
 
 export default function RegisterPage() {
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
 
   const handleSubmit = async (formData: FormData) => {
     setError("");
     const result = await registerUser(formData);
     if (result?.error) {
       setError(result.error);
+    } else if (result?.success) {
+      setSuccess(true);
     }
   };
+
+  if (success) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-zinc-50 dark:bg-black p-4">
+        <div className="w-full max-w-md bg-white dark:bg-zinc-900 rounded-2xl shadow-xl border border-zinc-200 dark:border-zinc-800 p-8 space-y-6 text-center">
+          <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-100">仮登録完了</h1>
+          <p className="text-zinc-500 dark:text-zinc-400">
+            登録されたメールアドレスに確認メールを送信しました。メール内のリンクをクリックして本登録を完了してください。
+          </p>
+          <div className="text-sm text-zinc-400">
+            ※現在はテストモードのため、ターミナル（コンソール）にリンクが表示されています。
+          </div>
+          <Link href="/login" className="inline-block mt-4 text-zinc-900 dark:text-zinc-100 underline underline-offset-4 font-medium hover:text-zinc-600 dark:hover:text-zinc-300">
+            ログインページへ戻る
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-zinc-50 dark:bg-black p-4">
