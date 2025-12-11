@@ -3,7 +3,7 @@
     "id": "1",
     "name": "User",
     "email": "user@example.com",
-    "username": "user",
+    "username": "user@example.com",
     "password": "password"
   }
 ]

@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 export default function LoginPage() {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
@@ -17,13 +17,13 @@ export default function LoginPage() {
 
     try {
       const result = await signIn("credentials", {
-        username,
+        email,
         password,
         redirect: false,
       });
 
       if (result?.error) {
-        setError("ログインに失敗しました。ユーザー名とパスワードを確認してください。");
+        setError("ログインに失敗しました。メールアドレスとパスワードを確認してください。");
       } else {
         router.push("/");
         router.refresh(); // 認証状態を反映させるためにリフレッシュ
@@ -44,15 +44,15 @@ export default function LoginPage() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1">
-              ユーザー名
+              メールアドレス
             </label>
             <input
-              type="text"
+              type="email"
               required
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-2 rounded-lg border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 focus:ring-2 focus:ring-zinc-500 outline-none"
-              placeholder="user"
+              placeholder="name@example.com"
             />
           </div>
           <div>
@@ -91,7 +91,7 @@ export default function LoginPage() {
             </Link>
           </div>
           <p>テスト用アカウント:</p>
-          <p>User: user / Pass: password</p>
+          <p>Email: user@example.com / Pass: password</p>
         </div>
       </div>
     </div>

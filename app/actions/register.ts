@@ -4,12 +4,14 @@ import { saveUser } from "@/app/lib/users";
 import { signIn } from "@/auth";
 
 export async function registerUser(formData: FormData) {
-  const username = formData.get("username") as string;
+  const email = formData.get("email") as string;
   const password = formData.get("password") as string;
-  const name = formData.get("name") as string || username;
+  // usernameとnameにもemailを使用する
+  const username = email;
+  const name = email.split('@')[0]; // @の前を名前のデフォルトにする
 
-  if (!username || !password) {
-    return { error: "ユーザー名とパスワードは必須です" };
+  if (!email || !password) {
+    return { error: "メールアドレスとパスワードは必須です" };
   }
 
   try {
@@ -18,14 +20,14 @@ export async function registerUser(formData: FormData) {
       username,
       password,
       name,
-      email: `${username}@example.com`, // ダミーメールアドレス
+      email,
     });
 
     // 登録成功後、自動的にログイン（signInは内部でredirectするためtry-catchの外で行うか、redirect: falseを使う）
     // Server Action内でのsignInはリダイレクトを伴うため、ここで終了
   } catch (err: any) {
     if (err.message === 'Username already exists') {
-      return { error: "このユーザー名は既に使用されています" };
+      return { error: "このメールアドレスは既に登録されています" };
     }
     console.error(err);
     return { error: "登録中にエラーが発生しました" };
@@ -33,7 +35,7 @@ export async function registerUser(formData: FormData) {
   
   // 登録成功したらログイン処理へ
   await signIn("credentials", {
-    username,
+    email,
     password,
     redirectTo: "/",
   });
