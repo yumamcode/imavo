@@ -56,3 +56,5 @@ export async function deleteToken(identifier: string, token: string) {
     .eq("token", token);
 }
 
+
+

@@ -8,3 +8,5 @@ export async function sendVerificationEmail(email: string, token: string) {
 
   // ここでResendやNodemailerなどを使って実際にメールを送信する実装を行う
 }
+
+
